@@ -5,6 +5,19 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 import { ProductCard } from "@/components/ProductCard";
 import { contact, goals, products } from "@/lib/data";
 
+const heroCarouselItems = [
+  {
+    id: "whey-stack",
+    src: "/assets/image.png",
+    alt: "KMMuscles Push Your Self whey protein supplement hero"
+  },
+  {
+    id: "mass-stack",
+    src: "/assets/image copy.png",
+    alt: "KMMuscles Push Your Self mass gainer supplement hero"
+  }
+];
+
 export default function HomePage() {
   const bestSellers = products.filter((product) => product.isBestSeller).slice(0, 4);
 
@@ -40,7 +53,14 @@ export default function HomePage() {
           </div>
           <div className="relative">
             <div className="absolute -inset-10 rounded-full bg-gym-red/20 blur-3xl" />
-            <HeroCarousel />
+            <HeroCarousel
+              items={heroCarouselItems}
+              autoplay
+              interval={4500}
+              showArrows
+              showDots
+              loop
+            />
           </div>
         </div>
       </section>
