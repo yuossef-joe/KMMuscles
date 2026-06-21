@@ -16,16 +16,28 @@ type SettingsPageProps = {
 
 type StoreForm = {
   logoUrl: string;
+  logoFile: File | null;
   faviconUrl: string;
+  faviconFile: File | null;
   metaTitle: string;
   metaDescription: string;
-  socialLinksJson: string;
+  siteSocialLinks: SocialLinksForm;
+  siteSocialExtras: Record<string, string>;
   email: string;
   phone: string;
   whatsapp: string;
   address: string;
   mapLink: string;
-  socialsJson: string;
+  contactSocialLinks: SocialLinksForm;
+  contactSocialExtras: Record<string, string>;
+};
+
+type SocialLinksForm = {
+  facebook: string;
+  instagram: string;
+  tiktok: string;
+  youtube: string;
+  x: string;
 };
 
 type CmsForm = {
@@ -59,10 +71,6 @@ function optionalString(value: string) {
   return trimmed ? trimmed : null;
 }
 
-function stringifyJson(value: unknown) {
-  return JSON.stringify(value ?? {}, null, 2);
-}
-
 function parseRecordJson(value: string, label: string) {
   if (!value.trim()) return null;
   const parsed = JSON.parse(value) as unknown;
@@ -72,19 +80,56 @@ function parseRecordJson(value: string, label: string) {
   return parsed as Record<string, unknown>;
 }
 
+const socialFields: Array<{ key: keyof SocialLinksForm; label: string }> = [
+  { key: "facebook", label: "Facebook" },
+  { key: "instagram", label: "Instagram" },
+  { key: "tiktok", label: "TikTok" },
+  { key: "youtube", label: "YouTube" },
+  { key: "x", label: "X" }
+];
+
+function initialSocialLinks(value?: Record<string, string> | null): SocialLinksForm {
+  return {
+    facebook: value?.facebook ?? "",
+    instagram: value?.instagram ?? "",
+    tiktok: value?.tiktok ?? "",
+    youtube: value?.youtube ?? "",
+    x: value?.x ?? ""
+  };
+}
+
+function socialExtras(value?: Record<string, string> | null) {
+  const knownKeys = new Set(socialFields.map((field) => field.key));
+  return Object.fromEntries(Object.entries(value ?? {}).filter(([key]) => !knownKeys.has(key as keyof SocialLinksForm)));
+}
+
+function socialLinksPayload(links: SocialLinksForm, extras: Record<string, string>) {
+  const payload = { ...extras };
+  for (const field of socialFields) {
+    const value = optionalString(links[field.key]);
+    if (value) payload[field.key] = value;
+    else delete payload[field.key];
+  }
+  return Object.keys(payload).length ? payload : null;
+}
+
 function initialStoreForm(site?: SiteSettings | null, contact?: ContactSettings | null): StoreForm {
   return {
     logoUrl: site?.logoUrl ?? "",
+    logoFile: null,
     faviconUrl: site?.faviconUrl ?? "",
+    faviconFile: null,
     metaTitle: site?.metaTitle ?? "",
     metaDescription: site?.metaDescription ?? "",
-    socialLinksJson: stringifyJson(site?.socialLinksJson),
+    siteSocialLinks: initialSocialLinks(site?.socialLinksJson),
+    siteSocialExtras: socialExtras(site?.socialLinksJson),
     email: contact?.email ?? "",
     phone: contact?.phone ?? "",
     whatsapp: contact?.whatsapp ?? "",
     address: contact?.address ?? "",
     mapLink: contact?.mapLink ?? "",
-    socialsJson: stringifyJson(contact?.socialsJson)
+    contactSocialLinks: initialSocialLinks(contact?.socialsJson),
+    contactSocialExtras: socialExtras(contact?.socialsJson)
   };
 }
 
@@ -94,7 +139,7 @@ function initialCmsForm(content?: CMSContent | null): CmsForm {
     status: content?.status ?? "DRAFT",
     metaTitle: content?.metaTitle ?? "",
     metaDescription: content?.metaDescription ?? "",
-    contentJson: stringifyJson(content?.contentJson ?? defaultHomeContent)
+    contentJson: JSON.stringify(content?.contentJson ?? defaultHomeContent, null, 2)
   };
 }
 
@@ -116,6 +161,8 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
   const [notice, setNotice] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState("");
+  const [faviconPreviewUrl, setFaviconPreviewUrl] = useState("");
 
   const effectiveType = useMemo(() => (type === "site" || type === "contact" ? "store" : type), [type]);
 
@@ -142,6 +189,28 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
   useEffect(() => {
     load();
   }, [effectiveType]);
+
+  useEffect(() => {
+    if (!storeForm.logoFile || typeof URL.createObjectURL !== "function") {
+      setLogoPreviewUrl("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(storeForm.logoFile);
+    setLogoPreviewUrl(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [storeForm.logoFile]);
+
+  useEffect(() => {
+    if (!storeForm.faviconFile || typeof URL.createObjectURL !== "function") {
+      setFaviconPreviewUrl("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(storeForm.faviconFile);
+    setFaviconPreviewUrl(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [storeForm.faviconFile]);
 
   async function saveHomepage(event: React.FormEvent) {
     event.preventDefault();
@@ -171,13 +240,20 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
     setNotice("");
     setIsSaving(true);
     try {
+      const [logoAsset, faviconAsset] = await Promise.all([
+        storeForm.logoFile ? contentApi.uploadMedia(storeForm.logoFile, "settings", "Site logo") : Promise.resolve(null),
+        storeForm.faviconFile ? contentApi.uploadMedia(storeForm.faviconFile, "settings", "Site favicon") : Promise.resolve(null)
+      ]);
+      const logoUrl = logoAsset?.url ?? storeForm.logoUrl;
+      const faviconUrl = faviconAsset?.url ?? storeForm.faviconUrl;
+
       await Promise.all([
         contentApi.updateSiteSettings({
-          logoUrl: optionalString(storeForm.logoUrl),
-          faviconUrl: optionalString(storeForm.faviconUrl),
+          logoUrl: optionalString(logoUrl),
+          faviconUrl: optionalString(faviconUrl),
           metaTitle: optionalString(storeForm.metaTitle),
           metaDescription: optionalString(storeForm.metaDescription),
-          socialLinksJson: parseRecordJson(storeForm.socialLinksJson, "Site social links")
+          socialLinksJson: socialLinksPayload(storeForm.siteSocialLinks, storeForm.siteSocialExtras)
         }),
         contentApi.updateContactSettings({
           email: storeForm.email,
@@ -185,7 +261,7 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
           whatsapp: optionalString(storeForm.whatsapp),
           address: storeForm.address,
           mapLink: optionalString(storeForm.mapLink),
-          socialsJson: parseRecordJson(storeForm.socialsJson, "Contact socials")
+          socialsJson: socialLinksPayload(storeForm.contactSocialLinks, storeForm.contactSocialExtras)
         })
       ]);
       setNotice("Store settings saved.");
@@ -253,16 +329,67 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
   }
 
   function renderStoreForm() {
+    function renderSocialInputs(
+      links: SocialLinksForm,
+      onChange: (links: SocialLinksForm) => void
+    ) {
+      return (
+        <div className="grid gap-4 md:grid-cols-2">
+          {socialFields.map((field) => (
+            <FormField key={field.key} label={field.label}>
+              <input
+                className={inputClass}
+                value={links[field.key]}
+                onChange={(event) => onChange({ ...links, [field.key]: event.target.value })}
+              />
+            </FormField>
+          ))}
+        </div>
+      );
+    }
+
     return (
       <form className="grid gap-5 rounded-lg border border-zinc-200 bg-white p-5" onSubmit={saveStoreSettings}>
         <section className="grid gap-4">
           <h2 className="text-base font-black text-zinc-950">Site metadata</h2>
           <div className="grid gap-4 md:grid-cols-2">
-            <FormField label="Logo URL">
-              <input className={inputClass} value={storeForm.logoUrl} onChange={(event) => setStoreForm({ ...storeForm, logoUrl: event.target.value })} />
+            <FormField label="Logo image">
+              <div className="grid gap-3">
+                {logoPreviewUrl || storeForm.logoUrl ? (
+                  <img
+                    alt="Current site logo"
+                    className="h-20 w-20 rounded-md border border-zinc-200 object-contain p-2"
+                    src={logoPreviewUrl || storeForm.logoUrl}
+                  />
+                ) : null}
+                <input
+                  accept="image/*"
+                  className={inputClass}
+                  onChange={(event) => setStoreForm({ ...storeForm, logoFile: event.target.files?.[0] ?? null })}
+                  type="file"
+                />
+                {storeForm.logoFile ? <span className="truncate text-xs font-medium text-zinc-500">{storeForm.logoFile.name}</span> : null}
+                {storeForm.logoUrl ? <span className="truncate text-xs font-medium text-zinc-500">{storeForm.logoUrl}</span> : null}
+              </div>
             </FormField>
-            <FormField label="Favicon URL">
-              <input className={inputClass} value={storeForm.faviconUrl} onChange={(event) => setStoreForm({ ...storeForm, faviconUrl: event.target.value })} />
+            <FormField label="Favicon image">
+              <div className="grid gap-3">
+                {faviconPreviewUrl || storeForm.faviconUrl ? (
+                  <img
+                    alt="Current favicon"
+                    className="h-20 w-20 rounded-md border border-zinc-200 object-contain p-2"
+                    src={faviconPreviewUrl || storeForm.faviconUrl}
+                  />
+                ) : null}
+                <input
+                  accept="image/*"
+                  className={inputClass}
+                  onChange={(event) => setStoreForm({ ...storeForm, faviconFile: event.target.files?.[0] ?? null })}
+                  type="file"
+                />
+                {storeForm.faviconFile ? <span className="truncate text-xs font-medium text-zinc-500">{storeForm.faviconFile.name}</span> : null}
+                {storeForm.faviconUrl ? <span className="truncate text-xs font-medium text-zinc-500">{storeForm.faviconUrl}</span> : null}
+              </div>
             </FormField>
             <FormField label="Meta title">
               <input className={inputClass} value={storeForm.metaTitle} onChange={(event) => setStoreForm({ ...storeForm, metaTitle: event.target.value })} />
@@ -271,9 +398,8 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
               <input className={inputClass} value={storeForm.metaDescription} onChange={(event) => setStoreForm({ ...storeForm, metaDescription: event.target.value })} />
             </FormField>
           </div>
-          <FormField label="Site social links JSON">
-            <textarea className={`${textareaClass} font-mono`} value={storeForm.socialLinksJson} onChange={(event) => setStoreForm({ ...storeForm, socialLinksJson: event.target.value })} />
-          </FormField>
+          <h3 className="text-sm font-black text-zinc-950">Site social links</h3>
+          {renderSocialInputs(storeForm.siteSocialLinks, (siteSocialLinks) => setStoreForm({ ...storeForm, siteSocialLinks }))}
         </section>
 
         <section className="grid gap-4 border-t border-zinc-200 pt-5">
@@ -295,9 +421,8 @@ export function SettingsPage({ type, title, description }: SettingsPageProps) {
           <FormField label="Address">
             <textarea className={textareaClass} required value={storeForm.address} onChange={(event) => setStoreForm({ ...storeForm, address: event.target.value })} />
           </FormField>
-          <FormField label="Contact socials JSON">
-            <textarea className={`${textareaClass} font-mono`} value={storeForm.socialsJson} onChange={(event) => setStoreForm({ ...storeForm, socialsJson: event.target.value })} />
-          </FormField>
+          <h3 className="text-sm font-black text-zinc-950">Contact socials</h3>
+          {renderSocialInputs(storeForm.contactSocialLinks, (contactSocialLinks) => setStoreForm({ ...storeForm, contactSocialLinks }))}
         </section>
         <Button icon={<Save size={16} />} isLoading={isSaving} type="submit">Save</Button>
       </form>

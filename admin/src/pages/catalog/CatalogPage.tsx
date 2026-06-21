@@ -19,7 +19,7 @@ type CatalogPageProps = {
 export function CatalogPage({ kind, title, description }: CatalogPageProps) {
   const api = catalogApi(kind);
   const [rows, setRows] = useState<CatalogEntity[]>([]);
-  const [form, setForm] = useState({ label: "", slug: "", displayOrder: 0, isActive: true });
+  const [form, setForm] = useState({ label: "", displayOrder: 0, isActive: true });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,14 +44,14 @@ export function CatalogPage({ kind, title, description }: CatalogPageProps) {
   }, [kind]);
 
   function closeForm() {
-    setForm({ label: "", slug: "", displayOrder: 0, isActive: true });
+    setForm({ label: "", displayOrder: 0, isActive: true });
     setEditingId(null);
     setIsCreating(false);
   }
 
   function startCreate() {
     setEditingId(null);
-    setForm({ label: "", slug: "", displayOrder: 0, isActive: true });
+    setForm({ label: "", displayOrder: 0, isActive: true });
     setIsCreating((value) => !value);
   }
 
@@ -60,7 +60,6 @@ export function CatalogPage({ kind, title, description }: CatalogPageProps) {
     setEditingId(row.id);
     setForm({
       label: row.name ?? row.title ?? "",
-      slug: row.slug,
       displayOrder: row.displayOrder ?? 0,
       isActive: row.isActive !== false
     });
@@ -69,7 +68,6 @@ export function CatalogPage({ kind, title, description }: CatalogPageProps) {
   function payload() {
     return {
       ...(kind === "goals" ? { title: form.label } : { name: form.label }),
-      ...(form.slug ? { slug: form.slug } : {}),
       ...(kind === "brands" ? {} : { displayOrder: Number(form.displayOrder) }),
       isActive: form.isActive
     };
@@ -141,9 +139,12 @@ export function CatalogPage({ kind, title, description }: CatalogPageProps) {
               <input className={inputClass} value={form.label} onChange={(event) => setForm({ ...form, label: event.target.value })} required />
             </FormField>
           </div>
-          <FormField label="Slug">
-            <input className={inputClass} placeholder="Generated when blank" value={form.slug} onChange={(event) => setForm({ ...form, slug: event.target.value })} />
-          </FormField>
+          <div className="grid gap-1.5 text-sm font-bold text-zinc-700">
+            <span>Slug</span>
+            <div className="flex h-10 items-center rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm font-medium text-zinc-500">
+              Auto-generated after save
+            </div>
+          </div>
           {kind !== "brands" ? (
             <FormField label="Display order">
               <input className={inputClass} min={0} type="number" value={form.displayOrder} onChange={(event) => setForm({ ...form, displayOrder: Number(event.target.value) })} />

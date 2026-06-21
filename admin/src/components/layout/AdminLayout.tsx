@@ -2,11 +2,7 @@ import {
   BarChart3,
   Boxes,
   CreditCard,
-  FileText,
-  Flag,
   Goal,
-  Home,
-  Image,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -39,15 +35,6 @@ const navGroups = [
       { label: "Categories", href: "/categories", icon: Boxes, roles: ["PRODUCT_MANAGER", "CONTENT_MANAGER"] },
       { label: "Brands", href: "/brands", icon: Shield, roles: ["PRODUCT_MANAGER"] },
       { label: "Goals", href: "/goals", icon: Goal, roles: ["PRODUCT_MANAGER", "CONTENT_MANAGER"] }
-    ]
-  },
-  {
-    label: "Content",
-    links: [
-      { label: "Homepage", href: "/homepage", icon: Home, roles: ["CONTENT_MANAGER"] },
-      { label: "Banners", href: "/banners", icon: Flag, roles: ["CONTENT_MANAGER"] },
-      { label: "Policies", href: "/policies", icon: FileText, roles: ["CONTENT_MANAGER"] },
-      { label: "Media", href: "/media", icon: Image, roles: ["CONTENT_MANAGER", "PRODUCT_MANAGER"] }
     ]
   },
   {

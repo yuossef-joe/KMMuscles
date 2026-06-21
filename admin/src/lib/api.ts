@@ -136,5 +136,12 @@ export const contentApi = {
   updatePaymentSettings: (body: Record<string, unknown>) =>
     apiRequest<PaymentSettings>("/admin/settings/payments", { method: "PUT", body: JSON.stringify(body) }),
   users: () => apiRequest<AdminUser[]>("/admin/users"),
-  media: () => apiRequest<MediaAsset[]>("/admin/media")
+  media: () => apiRequest<MediaAsset[]>("/admin/media"),
+  uploadMedia: (file: File, folder = "settings", altText?: string) => {
+    const body = new FormData();
+    body.append("file", file);
+    body.append("folder", folder);
+    if (altText) body.append("altText", altText);
+    return apiRequest<MediaAsset>("/admin/media", { method: "POST", body });
+  }
 };

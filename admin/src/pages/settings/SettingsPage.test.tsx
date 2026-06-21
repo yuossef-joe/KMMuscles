@@ -13,7 +13,8 @@ vi.mock("@/lib/api", () => ({
     contactSettings: vi.fn(),
     updateContactSettings: vi.fn(),
     paymentSettings: vi.fn(),
-    updatePaymentSettings: vi.fn()
+    updatePaymentSettings: vi.fn(),
+    uploadMedia: vi.fn()
   }
 }));
 
@@ -83,7 +84,7 @@ describe("settings page integrations", () => {
       whatsapp: null,
       address: "Cairo",
       mapLink: null,
-      socialsJson: {}
+      socialsJson: { instagram: "https://example.com/contact" }
     });
     mockedContentApi.updateSiteSettings.mockResolvedValue({ id: "site" });
     mockedContentApi.updateContactSettings.mockResolvedValue({
@@ -92,23 +93,41 @@ describe("settings page integrations", () => {
       phone: "+201000000000",
       address: "Cairo"
     });
+    mockedContentApi.uploadMedia.mockResolvedValue({
+      id: "media-1",
+      url: "/uploads/new-logo.png",
+      filename: "new-logo.png",
+      mimeType: "image/png",
+      sizeBytes: 128,
+      folder: "settings"
+    });
 
     render(<SettingsPage type="store" title="Store settings" description="Edit store settings." />);
 
+    await user.upload(await screen.findByLabelText(/logo image/i), new File(["logo"], "new-logo.png", { type: "image/png" }));
     const emailInput = await screen.findByLabelText(/email/i);
     await user.clear(emailInput);
     await user.type(emailInput, "support@kmmuscles.com");
+    const facebookInputs = screen.getAllByLabelText(/facebook/i);
+    await user.clear(facebookInputs[1]);
+    await user.type(facebookInputs[1], "https://facebook.com/contact");
     await user.click(screen.getByRole("button", { name: /save/i }));
 
     await waitFor(() => {
+      expect(mockedContentApi.uploadMedia).toHaveBeenCalledWith(expect.any(File), "settings", "Site logo");
       expect(mockedContentApi.updateSiteSettings).toHaveBeenCalledWith(expect.objectContaining({
-        logoUrl: "/logo.svg",
+        logoUrl: "/uploads/new-logo.png",
+        faviconUrl: null,
         socialLinksJson: { instagram: "https://example.com/km" }
       }));
       expect(mockedContentApi.updateContactSettings).toHaveBeenCalledWith(expect.objectContaining({
         email: "support@kmmuscles.com",
         phone: "+201000000000",
-        address: "Cairo"
+        address: "Cairo",
+        socialsJson: {
+          facebook: "https://facebook.com/contact",
+          instagram: "https://example.com/contact"
+        }
       }));
     });
   });

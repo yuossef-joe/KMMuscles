@@ -1,6 +1,7 @@
 import { adminLoginSchema } from "@/validators/admin-auth.validator";
 import { createOrderSchema } from "@/validators/order.validator";
 import { productBodySchema, productListQuerySchema } from "@/validators/product.validator";
+import { skuPrefixFromName } from "@/services/product.service";
 
 describe("validators", () => {
   it("accepts valid product filter query values", () => {
@@ -51,6 +52,30 @@ describe("validators", () => {
         name: "A",
         categoryId: "bad-id",
         price: -1
+      })
+    ).toThrow();
+  });
+
+  it("builds readable product SKU prefixes from names", () => {
+    expect(skuPrefixFromName("Gold Standard Whey 2KG")).toBe("GOLDSTANWHEY");
+    expect(skuPrefixFromName("!!!")).toBe("PRODUCT");
+  });
+
+  it("accepts uploaded product image URLs and rejects unsafe protocols", () => {
+    const parsed = productBodySchema.parse({
+      name: "Creatine Monohydrate",
+      categoryId: "7ad21895-b355-4bd5-a006-e365a221c57b",
+      price: 800,
+      imageUrls: ["/uploads/creatine.png"]
+    });
+
+    expect(parsed.imageUrls).toEqual(["/uploads/creatine.png"]);
+    expect(() =>
+      productBodySchema.parse({
+        name: "Creatine Monohydrate",
+        categoryId: "7ad21895-b355-4bd5-a006-e365a221c57b",
+        price: 800,
+        imageUrls: ["javascript:alert(1)"]
       })
     ).toThrow();
   });

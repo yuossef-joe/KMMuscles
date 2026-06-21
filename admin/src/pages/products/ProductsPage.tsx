@@ -1,4 +1,4 @@
-import { Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
+import { ImagePlus, Pencil, Plus, RefreshCw, Search, Trash2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/common/Button";
 import { DataTable } from "@/components/common/DataTable";
@@ -7,13 +7,15 @@ import { FormField, inputClass } from "@/components/common/FormField";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { catalogApi, productApi } from "@/lib/api";
+import { catalogApi, contentApi, productApi } from "@/lib/api";
 import { formatCurrency } from "@/lib/format";
 import type { CatalogEntity, Product } from "@/types";
 
 type ProductForm = {
   name: string;
   sku: string;
+  imageFile: File | null;
+  imageUrl: string;
   categoryId: string;
   price: number;
   stockQuantity: number;
@@ -22,6 +24,8 @@ type ProductForm = {
 const emptyProduct: ProductForm = {
   name: "",
   sku: "",
+  imageFile: null,
+  imageUrl: "",
   categoryId: "",
   price: 0,
   stockQuantity: 0
@@ -37,6 +41,7 @@ export function ProductsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [savingId, setSavingId] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
 
   const query = useMemo(() => (search ? `?search=${encodeURIComponent(search)}` : ""), [search]);
 
@@ -58,14 +63,30 @@ export function ProductsPage() {
     load();
   }, [query]);
 
+  useEffect(() => {
+    if (!form.imageFile || typeof URL.createObjectURL !== "function") {
+      setImagePreviewUrl("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(form.imageFile);
+    setImagePreviewUrl(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [form.imageFile]);
+
   async function createProduct(event: React.FormEvent) {
     event.preventDefault();
     setError("");
     setSavingId("new");
     try {
+      const imageAsset = form.imageFile ? await contentApi.uploadMedia(form.imageFile, "products", form.name) : null;
+      const imageUrl = imageAsset?.url ?? form.imageUrl;
       await productApi.create({
         ...form,
-        ...(form.sku ? { sku: form.sku } : { sku: undefined }),
+        sku: undefined,
+        imageFile: undefined,
+        imageUrl: undefined,
+        imageUrls: imageUrl ? [imageUrl] : [],
         price: Number(form.price),
         stockQuantity: Number(form.stockQuantity),
         benefits: [],
@@ -94,6 +115,8 @@ export function ProductsPage() {
     setForm({
       name: product.name,
       sku: product.sku ?? "",
+      imageFile: null,
+      imageUrl: product.thumbnailUrl ?? "",
       categoryId: product.category?.id ?? "",
       price: product.price,
       stockQuantity: product.stockQuantity
@@ -113,9 +136,14 @@ export function ProductsPage() {
     setError("");
     setSavingId(editingId);
     try {
+      const imageAsset = form.imageFile ? await contentApi.uploadMedia(form.imageFile, "products", form.name) : null;
+      const imageUrl = imageAsset?.url ?? form.imageUrl;
       await productApi.update(editingId, {
         ...form,
         ...(form.sku ? { sku: form.sku } : { sku: undefined }),
+        imageFile: undefined,
+        imageUrl: undefined,
+        ...(imageUrl ? { imageUrls: [imageUrl] } : {}),
         price: Number(form.price),
         stockQuantity: Number(form.stockQuantity)
       });
@@ -184,9 +212,18 @@ export function ProductsPage() {
           <FormField label="Name">
             <input className={inputClass} value={form.name} onChange={(event) => setForm({ ...form, name: event.target.value })} required />
           </FormField>
-          <FormField label="SKU">
-            <input className={inputClass} value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} />
-          </FormField>
+          {editingId ? (
+            <FormField label="SKU">
+              <input className={inputClass} value={form.sku} onChange={(event) => setForm({ ...form, sku: event.target.value })} />
+            </FormField>
+          ) : (
+            <div className="grid gap-1.5 text-sm font-bold text-zinc-700">
+              <span>SKU</span>
+              <div className="flex h-10 items-center rounded-md border border-zinc-200 bg-zinc-50 px-3 text-sm font-medium text-zinc-500">
+                Auto-generated after save
+              </div>
+            </div>
+          )}
           <FormField label="Category">
             <select className={inputClass} value={form.categoryId} onChange={(event) => setForm({ ...form, categoryId: event.target.value })} required>
               <option value="">Select category</option>
@@ -199,6 +236,35 @@ export function ProductsPage() {
           <FormField label="Stock">
             <input className={inputClass} min={0} type="number" value={form.stockQuantity} onChange={(event) => setForm({ ...form, stockQuantity: Number(event.target.value) })} required />
           </FormField>
+          <div className="grid min-w-0 gap-4 md:col-span-5 md:grid-cols-[112px_minmax(0,1fr)]">
+            <div className="grid h-28 w-28 place-items-center overflow-hidden rounded-md border border-zinc-200 bg-zinc-50">
+              {imagePreviewUrl || form.imageUrl ? (
+                <img src={imagePreviewUrl || form.imageUrl} alt="Product preview" className="h-full w-full object-contain p-2" />
+              ) : (
+                <span className="px-3 text-center text-xs font-bold text-zinc-400">No image</span>
+              )}
+            </div>
+            <FormField label="Product image">
+              <div className="focus-within:ring-gym-red/30 flex min-h-20 w-full min-w-0 items-center justify-between gap-4 rounded-md border border-dashed border-zinc-300 bg-zinc-50 px-4 py-3 transition focus-within:border-gym-red focus-within:ring-4 hover:border-gym-red">
+                <div className="flex min-w-0 items-center gap-3">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-white text-gym-red ring-1 ring-zinc-200">
+                    <ImagePlus size={18} />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-black text-zinc-900">{form.imageFile?.name ?? "Choose product image"}</p>
+                    <p className="truncate text-xs font-medium text-zinc-500">PNG, JPG, or WebP</p>
+                  </div>
+                </div>
+                <span className="shrink-0 rounded-md bg-zinc-900 px-3 py-2 text-xs font-black text-white">Browse</span>
+                <input
+                  accept="image/*"
+                  className="sr-only"
+                  onChange={(event) => setForm({ ...form, imageFile: event.target.files?.[0] ?? null })}
+                  type="file"
+                />
+              </div>
+            </FormField>
+          </div>
           <div className="md:col-span-5">
             <Button isLoading={savingId === (editingId ?? "new")} type="submit">
               {editingId ? "Save changes" : "Create product"}

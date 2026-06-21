@@ -120,12 +120,48 @@ export function mapGoalDetail(goal: any) {
   };
 }
 
+async function uniqueCategorySlug(name: string, excludeId?: string) {
+  const base = slugify(name) || "category";
+
+  for (let index = 0; index < 50; index += 1) {
+    const slug = index === 0 ? base : `${base}-${index + 1}`;
+    const existing = await prisma.category.findUnique({ where: { slug }, select: { id: true } });
+    if (!existing || existing.id === excludeId) return slug;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
+async function uniqueBrandSlug(name: string, excludeId?: string) {
+  const base = slugify(name) || "brand";
+
+  for (let index = 0; index < 50; index += 1) {
+    const slug = index === 0 ? base : `${base}-${index + 1}`;
+    const existing = await prisma.brand.findUnique({ where: { slug }, select: { id: true } });
+    if (!existing || existing.id === excludeId) return slug;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
+async function uniqueGoalSlug(title: string, excludeId?: string) {
+  const base = slugify(title) || "goal";
+
+  for (let index = 0; index < 50; index += 1) {
+    const slug = index === 0 ? base : `${base}-${index + 1}`;
+    const existing = await prisma.goalCollection.findUnique({ where: { slug }, select: { id: true } });
+    if (!existing || existing.id === excludeId) return slug;
+  }
+
+  return `${base}-${Date.now().toString(36)}`;
+}
+
 export async function createCategory(data: any) {
-  return prisma.category.create({ data: { ...data, slug: data.slug ?? slugify(data.name) } });
+  return prisma.category.create({ data: { ...data, slug: await uniqueCategorySlug(data.name) } });
 }
 
 export async function updateCategory(id: string, data: any) {
-  return prisma.category.update({ where: { id }, data });
+  return prisma.category.update({ where: { id }, data: { ...data, slug: data.name ? await uniqueCategorySlug(data.name, id) : undefined } });
 }
 
 export async function archiveCategory(id: string) {
@@ -133,11 +169,11 @@ export async function archiveCategory(id: string) {
 }
 
 export async function createBrand(data: any) {
-  return prisma.brand.create({ data: { ...data, slug: data.slug ?? slugify(data.name) } });
+  return prisma.brand.create({ data: { ...data, slug: await uniqueBrandSlug(data.name) } });
 }
 
 export async function updateBrand(id: string, data: any) {
-  return prisma.brand.update({ where: { id }, data });
+  return prisma.brand.update({ where: { id }, data: { ...data, slug: data.name ? await uniqueBrandSlug(data.name, id) : undefined } });
 }
 
 export async function archiveBrand(id: string) {
@@ -145,11 +181,11 @@ export async function archiveBrand(id: string) {
 }
 
 export async function createGoal(data: any) {
-  return prisma.goalCollection.create({ data: { ...data, slug: data.slug ?? slugify(data.title) } });
+  return prisma.goalCollection.create({ data: { ...data, slug: await uniqueGoalSlug(data.title) } });
 }
 
 export async function updateGoal(id: string, data: any) {
-  return prisma.goalCollection.update({ where: { id }, data });
+  return prisma.goalCollection.update({ where: { id }, data: { ...data, slug: data.title ? await uniqueGoalSlug(data.title, id) : undefined } });
 }
 
 export async function archiveGoal(id: string) {

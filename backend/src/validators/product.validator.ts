@@ -1,6 +1,13 @@
 import { z } from "zod";
 import { booleanQuery, paginationQuerySchema } from "@/validators/common.validator";
 
+const unsafeUrlPattern = /^(javascript|data|file):/i;
+
+const safeUrl = z
+  .string()
+  .max(500)
+  .refine((value) => !unsafeUrlPattern.test(value), "Unsafe URL protocol is not allowed");
+
 export const productListQuerySchema = paginationQuerySchema.extend({
   search: z.string().trim().max(120).optional(),
   category: z.string().trim().max(120).optional(),
@@ -20,7 +27,6 @@ export const relatedQuerySchema = z.object({
 
 export const productBodySchema = z.object({
   name: z.string().min(2).max(180),
-  slug: z.string().min(2).max(180).optional(),
   sku: z.string().min(2).max(80).optional(),
   brandId: z.string().uuid().optional().nullable(),
   categoryId: z.string().uuid(),
@@ -32,6 +38,7 @@ export const productBodySchema = z.object({
   nutritionFacts: z.record(z.string()).optional().default({}),
   price: z.coerce.number().positive(),
   originalPrice: z.coerce.number().positive().optional().nullable(),
+  imageUrls: z.array(safeUrl).max(10).optional().default([]),
   stockQuantity: z.coerce.number().int().min(0).default(0),
   isBestSeller: z.boolean().optional(),
   isFeatured: z.boolean().optional(),
