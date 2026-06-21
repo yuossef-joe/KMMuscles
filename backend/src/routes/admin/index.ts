@@ -41,6 +41,7 @@ import {
 import {
   bannerBodySchema,
   bannerUpdateSchema,
+  cmsContentBodySchema,
   contactSettingsSchema,
   paymentSettingsSchema,
   policyBodySchema,
@@ -237,6 +238,17 @@ adminRouter.delete("/banners/:id", requireRole(...contentRoles), validate({ para
 
 adminRouter.get("/policies", requireRole(...contentRoles), asyncHandler(async (_req, res) => sendSuccess(res, await prisma.policyPage.findMany({ orderBy: { updatedAt: "desc" } }))));
 adminRouter.put("/policies/:key", requireRole(...contentRoles), validate({ params: keyParamSchema, body: policyBodySchema }), asyncHandler(async (req, res) => sendSuccess(res, await prisma.policyPage.upsert({ where: { key: req.params.key }, update: req.body, create: { key: req.params.key, ...req.body } }))));
+
+adminRouter.get("/cms/:key", requireRole(...contentRoles), validate({ params: keyParamSchema }), asyncHandler(async (req, res) => sendSuccess(res, await prisma.cMSContent.findUnique({ where: { pageKey: req.params.key } }))));
+adminRouter.put("/cms/:key", requireRole(...contentRoles), validate({ params: keyParamSchema, body: cmsContentBodySchema }), asyncHandler(async (req, res) => {
+  const content = await prisma.cMSContent.upsert({
+    where: { pageKey: req.params.key },
+    update: req.body,
+    create: { pageKey: req.params.key, ...req.body }
+  });
+  await writeAuditLog({ adminUserId: req.admin?.id, action: "update", entityType: "CMSContent", entityId: content.id });
+  sendSuccess(res, content);
+}));
 
 adminRouter.get("/settings/site", requireRole(...contentRoles), asyncHandler(async (_req, res) => sendSuccess(res, await prisma.siteSettings.findUnique({ where: { id: "site" } }))));
 adminRouter.put("/settings/site", requireRole(...contentRoles), validate({ body: siteSettingsSchema }), asyncHandler(async (req, res) => sendSuccess(res, await prisma.siteSettings.upsert({ where: { id: "site" }, update: req.body, create: { id: "site", ...req.body } }))));

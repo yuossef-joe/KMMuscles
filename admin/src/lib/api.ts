@@ -3,12 +3,16 @@ import type {
   ApiEnvelope,
   Banner,
   CatalogEntity,
+  CMSContent,
+  ContactSettings,
   DashboardSummary,
   MediaAsset,
   Order,
   Pagination,
+  PaymentSettings,
   PolicyPage,
-  Product
+  Product,
+  SiteSettings
 } from "@/types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5000/api";
@@ -119,9 +123,18 @@ export const orderApi = {
 export const contentApi = {
   banners: () => apiRequest<Banner[]>("/admin/banners"),
   policies: () => apiRequest<PolicyPage[]>("/admin/policies"),
-  siteSettings: () => apiRequest<Record<string, unknown> | null>("/admin/settings/site"),
-  contactSettings: () => apiRequest<Record<string, unknown> | null>("/admin/settings/contact"),
-  paymentSettings: () => apiRequest<Record<string, unknown> | null>("/admin/settings/payments"),
+  cmsContent: (key: string) => apiRequest<CMSContent | null>(`/admin/cms/${key}`),
+  updateCmsContent: (key: string, body: Record<string, unknown>) =>
+    apiRequest<CMSContent>(`/admin/cms/${key}`, { method: "PUT", body: JSON.stringify(body) }),
+  siteSettings: () => apiRequest<SiteSettings | null>("/admin/settings/site"),
+  updateSiteSettings: (body: Record<string, unknown>) =>
+    apiRequest<SiteSettings>("/admin/settings/site", { method: "PUT", body: JSON.stringify(body) }),
+  contactSettings: () => apiRequest<ContactSettings | null>("/admin/settings/contact"),
+  updateContactSettings: (body: Record<string, unknown>) =>
+    apiRequest<ContactSettings>("/admin/settings/contact", { method: "PUT", body: JSON.stringify(body) }),
+  paymentSettings: () => apiRequest<PaymentSettings | null>("/admin/settings/payments"),
+  updatePaymentSettings: (body: Record<string, unknown>) =>
+    apiRequest<PaymentSettings>("/admin/settings/payments", { method: "PUT", body: JSON.stringify(body) }),
   users: () => apiRequest<AdminUser[]>("/admin/users"),
   media: () => apiRequest<MediaAsset[]>("/admin/media")
 };

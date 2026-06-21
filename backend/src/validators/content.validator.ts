@@ -29,6 +29,14 @@ export const policyBodySchema = z.object({
   metaDescription: z.string().max(300).optional().nullable()
 });
 
+export const cmsContentBodySchema = z.object({
+  title: z.string().min(2).max(160),
+  contentJson: z.record(z.unknown()),
+  status: z.enum(["DRAFT", "PUBLISHED", "ARCHIVED"]).optional(),
+  metaTitle: z.string().max(160).optional().nullable(),
+  metaDescription: z.string().max(300).optional().nullable()
+});
+
 export const siteSettingsSchema = z.object({
   logoUrl: safeUrl.optional().nullable(),
   faviconUrl: safeUrl.optional().nullable(),

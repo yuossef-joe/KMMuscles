@@ -104,6 +104,45 @@ export type PolicyPage = {
   updatedAt: string;
 };
 
+export type CMSContent = {
+  id: string;
+  pageKey: string;
+  title: string;
+  contentJson: Record<string, unknown>;
+  status: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  updatedAt: string;
+};
+
+export type SiteSettings = {
+  id: string;
+  logoUrl?: string | null;
+  faviconUrl?: string | null;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  socialLinksJson?: Record<string, string> | null;
+};
+
+export type ContactSettings = {
+  id: string;
+  email: string;
+  phone: string;
+  whatsapp?: string | null;
+  address: string;
+  mapLink?: string | null;
+  socialsJson?: Record<string, string> | null;
+};
+
+export type PaymentSettings = {
+  id: string;
+  cashOnDeliveryEnabled: boolean;
+  vodafoneCashEnabled: boolean;
+  vodafoneCashNumber?: string | null;
+  vodafoneCashInstructions?: string | null;
+  cardEnabled: boolean;
+};
+
 export type MediaAsset = {
   id: string;
   url: string;

@@ -30,7 +30,7 @@ export function App() {
           <Route element={<SimpleListPage type="media" title="Media library" description="Review uploaded media assets and alt text." />} path="media" />
           <Route element={<SettingsPage type="customers" title="Customers" description="Customer workspace derived from order and account data." />} path="customers" />
           <Route element={<SettingsPage type="payments" title="Payment settings" description="Manage COD, Vodafone Cash, and card readiness." />} path="payments" />
-          <Route element={<SettingsPage type="contact" title="Store settings" description="Manage contact information, address, and social links." />} path="settings" />
+          <Route element={<SettingsPage type="store" title="Store settings" description="Manage site metadata, contact information, address, and social links." />} path="settings" />
           <Route element={<SimpleListPage type="users" title="Users & roles" description="Review admin accounts and access roles." />} path="users" />
           <Route element={<Navigate replace to="/" />} path="*" />
         </Route>
