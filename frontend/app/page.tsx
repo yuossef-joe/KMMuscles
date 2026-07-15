@@ -23,28 +23,29 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="relative overflow-hidden bg-muscle-black">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_78%_45%,rgba(226,27,45,0.34),transparent_34%),linear-gradient(135deg,#050505_0%,#120305_58%,#050505_100%)]" />
-        <div className="container-page relative grid min-h-[560px] items-center gap-12 py-24 md:min-h-[640px] lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="relative overflow-hidden bg-paper">
+        <div className="container-page relative grid min-h-[520px] items-center gap-12 py-16 md:min-h-[600px] md:py-20 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="max-w-3xl">
-            <p className="mb-5 inline-flex rounded bg-gym-red px-4 py-2 text-xs font-black uppercase tracking-wide">
+            <p className="eyebrow mb-5 inline-flex items-center gap-2 rounded-full border border-line px-4 py-2 text-ink-soft">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-red" />
               Supplements for every goal
             </p>
-            <h1 className="font-heading text-[clamp(4rem,13vw,10rem)] font-black uppercase leading-[0.82]">
+            <h1 className="font-heading text-[clamp(3rem,10vw,7.5rem)] uppercase leading-[0.9] text-ink">
               Reach Your Potential
             </h1>
-            <p className="mt-6 max-w-xl text-xl text-zinc-200 md:text-2xl">
-              Everyone has goals, let us help you with yours
+            <p className="mt-6 max-w-xl text-lg text-ink-soft md:text-xl">
+              Everyone has goals — let us help you with yours. Trusted supplements, honest advice,
+              delivered across Egypt.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link
-                className="focus-ring inline-flex h-13 items-center gap-2 rounded-lg bg-gym-red px-7 py-4 font-black uppercase text-white transition hover:bg-energy-orange"
+                className="focus-ring inline-flex h-12 items-center gap-2 rounded-lg bg-ink px-7 text-sm font-medium uppercase tracking-wide text-white transition hover:bg-brand-red"
                 href="/products"
               >
-                Shop Now <ArrowRight size={20} />
+                Shop Now <ArrowRight size={18} />
               </Link>
               <Link
-                className="focus-ring inline-flex h-13 items-center rounded-lg border border-white/30 px-7 py-4 font-black uppercase text-white transition hover:border-gym-red hover:text-gym-red"
+                className="focus-ring inline-flex h-12 items-center rounded-lg border border-ink px-7 text-sm font-medium uppercase tracking-wide text-ink transition hover:bg-ink hover:text-white"
                 href="/brands"
               >
                 Browse Brands
@@ -52,7 +53,6 @@ export default function HomePage() {
             </div>
           </div>
           <div className="relative">
-            <div className="absolute -inset-10 rounded-full bg-gym-red/20 blur-3xl" />
             <HeroCarousel
               items={heroCarouselItems}
               autoplay
@@ -65,14 +65,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="dark-grid bg-deep-charcoal py-16">
+      <section className="border-y border-line bg-paper py-16">
         <div className="container-page">
           <div className="mb-9 flex items-end justify-between gap-6">
             <div>
-              <p className="text-sm font-black uppercase text-gym-red">Shop by goal</p>
-              <h2 className="section-title mt-2">Choose Your Stack</h2>
+              <p className="eyebrow text-ink-soft">Shop by goal</p>
+              <h2 className="section-title mt-2 text-ink">Choose Your Stack</h2>
             </div>
-            <Link className="hidden font-bold uppercase text-zinc-300 hover:text-gym-red md:block" href="/products">
+            <Link className="hidden text-sm font-medium uppercase tracking-wide text-ink-soft transition hover:text-brand-red md:block" href="/products">
               View all products
             </Link>
           </div>
@@ -81,20 +81,19 @@ export default function HomePage() {
               <Link
                 href={`/goals/${goal.slug}`}
                 key={goal.slug}
-                className="group relative min-h-[420px] overflow-hidden rounded-2xl border border-border-gray bg-muscle-black p-5 shadow-card"
+                className="group relative flex min-h-[420px] flex-col overflow-hidden rounded-xl border border-line bg-surface p-5 transition hover:border-ink/20 hover:shadow-card"
               >
-                <div className="absolute inset-x-6 top-8 h-40 rounded-full bg-gym-red/20 blur-3xl transition group-hover:bg-energy-orange/30" />
                 <Image
                   src={goal.image}
                   alt={goal.title}
                   width={460}
                   height={524}
-                  className="relative mx-auto h-64 w-full object-contain transition duration-300 group-hover:scale-105"
+                  className="relative mx-auto h-64 w-full object-contain transition duration-500 group-hover:scale-105"
                 />
                 <div className="relative mt-6">
-                  <p className="text-sm font-bold uppercase text-energy-orange">{goal.accent}</p>
-                  <h3 className="font-heading text-4xl font-black uppercase">{goal.title}</h3>
-                  <span className="mt-5 inline-flex rounded-lg border border-white/20 px-5 py-3 text-sm font-black uppercase transition group-hover:border-gym-red group-hover:bg-gym-red">
+                  <p className="eyebrow text-brand-red">{goal.accent}</p>
+                  <h3 className="mt-1 font-heading text-3xl uppercase text-ink">{goal.title}</h3>
+                  <span className="mt-5 inline-flex rounded-lg border border-ink px-5 py-2.5 text-sm font-medium uppercase tracking-wide text-ink transition group-hover:bg-ink group-hover:text-white">
                     Discover
                   </span>
                 </div>
@@ -104,22 +103,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-muscle-black py-16">
+      <section className="bg-surface py-16">
         <div className="container-page">
           <Link
             href="/products?featured=true"
-            className="group relative grid min-h-[260px] overflow-hidden rounded-2xl border border-border-gray bg-gym-red md:grid-cols-[1.1fr_0.9fr]"
+            className="group relative grid min-h-[260px] overflow-hidden rounded-2xl bg-brand-red text-white md:grid-cols-[1.1fr_0.9fr]"
           >
             <div className="relative z-10 p-8 md:p-12">
-              <p className="text-sm font-black uppercase text-white/80">Big offers</p>
-              <h2 className="mt-3 max-w-2xl font-heading text-5xl font-black uppercase leading-none md:text-7xl">
+              <p className="eyebrow text-white/80">Big offers</p>
+              <h2 className="mt-3 max-w-2xl font-heading text-5xl uppercase leading-none md:text-7xl">
                 Push Your Limits
               </h2>
               <p className="mt-4 max-w-lg text-lg text-white/90">
                 Pick your training essentials from best sellers and goal-based supplement stacks.
               </p>
-              <span className="mt-7 inline-flex items-center gap-2 rounded-lg bg-muscle-black px-6 py-3 font-black uppercase">
-                Shop Offers <ArrowRight size={19} />
+              <span className="mt-7 inline-flex items-center gap-2 rounded-lg bg-ink px-6 py-3 text-sm font-medium uppercase tracking-wide transition group-hover:bg-white group-hover:text-ink">
+                Shop Offers <ArrowRight size={18} />
               </span>
             </div>
             <div className="relative min-h-56 overflow-hidden bg-white">
@@ -140,14 +139,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-light-gray py-16 text-zinc-950">
+      <section className="bg-paper py-16 text-ink">
         <div className="container-page">
           <div className="mb-9 flex items-end justify-between gap-6">
             <div>
-              <p className="text-sm font-black uppercase text-gym-red">Best Sellers</p>
-              <h2 className="section-title mt-2 text-zinc-950">Best Sellers</h2>
+              <p className="eyebrow text-brand-red">Most wanted</p>
+              <h2 className="section-title mt-2 text-ink">Best Sellers</h2>
             </div>
-            <Link className="hidden font-bold uppercase text-zinc-700 hover:text-gym-red md:block" href="/products">
+            <Link className="hidden text-sm font-medium uppercase tracking-wide text-ink-soft transition hover:text-brand-red md:block" href="/products">
               Shop all
             </Link>
           </div>
@@ -159,22 +158,22 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-deep-charcoal py-14">
+      <section className="border-t border-line bg-surface py-14">
         <div className="container-page grid gap-6 md:grid-cols-3">
-          <div className="rounded-2xl border border-border-gray bg-muscle-black p-6">
-            <MapPin className="text-gym-red" />
-            <h3 className="mt-4 font-heading text-3xl uppercase">Store Location</h3>
-            <p className="mt-2 text-zinc-400">{contact.address}</p>
+          <div className="rounded-xl border border-line bg-paper p-6">
+            <MapPin className="text-brand-red" />
+            <h3 className="mt-4 font-heading text-2xl uppercase text-ink">Store Location</h3>
+            <p className="mt-2 text-ink-soft">{contact.address}</p>
           </div>
-          <div className="rounded-2xl border border-border-gray bg-muscle-black p-6">
-            <Phone className="text-gym-red" />
-            <h3 className="mt-4 font-heading text-3xl uppercase">Phone</h3>
-            <p className="mt-2 text-zinc-400">{contact.phone}</p>
+          <div className="rounded-xl border border-line bg-paper p-6">
+            <Phone className="text-brand-red" />
+            <h3 className="mt-4 font-heading text-2xl uppercase text-ink">Phone</h3>
+            <p className="mt-2 text-ink-soft">{contact.phone}</p>
           </div>
-          <div className="rounded-2xl border border-border-gray bg-muscle-black p-6">
-            <Mail className="text-gym-red" />
-            <h3 className="mt-4 font-heading text-3xl uppercase">Email</h3>
-            <p className="mt-2 text-zinc-400">{contact.email}</p>
+          <div className="rounded-xl border border-line bg-paper p-6">
+            <Mail className="text-brand-red" />
+            <h3 className="mt-4 font-heading text-2xl uppercase text-ink">Email</h3>
+            <p className="mt-2 text-ink-soft">{contact.email}</p>
           </div>
         </div>
       </section>

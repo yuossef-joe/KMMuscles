@@ -144,7 +144,7 @@ export function HeroCarousel({
   return (
     <section
       className={clsx(
-        "group relative overflow-hidden rounded-2xl border border-border-gray bg-white shadow-glow outline-none",
+        "group relative overflow-hidden rounded-2xl border border-line bg-white shadow-card outline-none",
         className
       )}
       aria-label="Featured product carousel"
@@ -192,7 +192,7 @@ export function HeroCarousel({
             type="button"
             onClick={goToPrevious}
             disabled={!loop && active === 0}
-            className="focus-ring absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-muscle-black/75 text-white opacity-95 backdrop-blur transition hover:bg-gym-red disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/80 text-white opacity-95 backdrop-blur transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-35"
             aria-label="Previous hero slide"
           >
             <ChevronLeft size={22} />
@@ -201,7 +201,7 @@ export function HeroCarousel({
             type="button"
             onClick={goToNext}
             disabled={!loop && active === itemCount - 1}
-            className="focus-ring absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-muscle-black/75 text-white opacity-95 backdrop-blur transition hover:bg-gym-red disabled:cursor-not-allowed disabled:opacity-35"
+            className="focus-ring absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-ink/80 text-white opacity-95 backdrop-blur transition hover:bg-ink disabled:cursor-not-allowed disabled:opacity-35"
             aria-label="Next hero slide"
           >
             <ChevronRight size={22} />
@@ -218,7 +218,7 @@ export function HeroCarousel({
               onClick={() => goTo(index, index > active ? 1 : -1)}
               className={clsx(
                 "focus-ring h-2.5 rounded-full transition-all",
-                active === index ? "w-8 bg-gym-red" : "w-2.5 bg-zinc-300 hover:bg-zinc-100"
+                active === index ? "w-8 bg-ink" : "w-2.5 bg-ink/25 hover:bg-ink/50"
               )}
               aria-label={`Go to hero slide ${index + 1}`}
               aria-selected={active === index}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Oswald } from "next/font/google";
+import { Inter, Questrial } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -11,8 +11,9 @@ const inter = Inter({
   display: "swap"
 });
 
-const oswald = Oswald({
+const questrial = Questrial({
   subsets: ["latin"],
+  weight: "400",
   variable: "--font-heading",
   display: "swap"
 });
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${oswald.variable}`}>
+    <html lang="en" className={`${inter.variable} ${questrial.variable}`}>
       <body>
         <Providers>
           <SiteHeader />

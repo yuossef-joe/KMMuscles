@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
-  --font-heading: "Oswald";
+  color-scheme: light;
+  --font-heading: "Questrial";
   --font-body: "Inter";
 }
 
@@ -18,9 +18,10 @@ html {
 
 body {
   margin: 0;
-  background: #050505;
-  color: #ffffff;
-  font-family: var(--font-body), Arial, sans-serif;
+  background: #ffffff;
+  color: #121212;
+  font-family: var(--font-body), "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -36,7 +37,7 @@ select {
 }
 
 ::selection {
-  background: #e21b2d;
+  background: #121212;
   color: #ffffff;
 }
 
@@ -45,12 +46,22 @@ select {
   margin-inline: auto;
 }
 
+/* Questrial is single-weight; hierarchy comes from scale, casing and tracking */
 .section-title {
-  font-family: var(--font-heading), Impact, sans-serif;
-  font-size: clamp(2rem, 4.5vw, 4rem);
-  line-height: 0.95;
+  font-family: var(--font-heading), "Helvetica Neue", sans-serif;
+  font-size: clamp(1.75rem, 4vw, 3.25rem);
+  line-height: 1.02;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
+}
+
+.eyebrow {
+  font-family: var(--font-heading), "Helvetica Neue", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
 }
 
 .focus-ring {
@@ -59,14 +70,11 @@ select {
 }
 
 .focus-ring:focus-visible {
-  outline-color: #ff6a00;
+  outline-color: #334fb4;
 }
 
-.dark-grid {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-  background-size: 42px 42px;
+.hairline {
+  border-color: #e5e5e5;
 }
 
 .product-card-image {

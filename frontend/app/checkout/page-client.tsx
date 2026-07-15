@@ -23,45 +23,45 @@ export function CheckoutClient() {
   }
 
   return (
-    <section className="bg-light-gray py-12 text-zinc-950">
+    <section className="bg-surface py-12 text-ink">
       <form onSubmit={submit} className="container-page grid gap-8 lg:grid-cols-[1fr_380px]">
         <div>
-          <p className="text-sm font-black uppercase text-gym-red">Guest checkout</p>
-          <h1 className="section-title mt-2 text-zinc-950">Checkout</h1>
-          <div className="mt-8 grid gap-4 rounded-2xl bg-white p-6 shadow-card">
+          <p className="eyebrow text-ink-soft">Guest checkout</p>
+          <h1 className="section-title mt-2 text-ink">Checkout</h1>
+          <div className="mt-8 grid gap-4 rounded-xl border border-line bg-paper p-6">
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm font-bold">
+              <label className="grid gap-2 text-sm font-medium text-ink">
                 Full name
-                <input required className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input required className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold">
+              <label className="grid gap-2 text-sm font-medium text-ink">
                 Phone number
-                <input required className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input required className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold">
+              <label className="grid gap-2 text-sm font-medium text-ink">
                 Email optional
-                <input type="email" className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input type="email" className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold">
+              <label className="grid gap-2 text-sm font-medium text-ink">
                 Governorate
-                <input required className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input required className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold">
+              <label className="grid gap-2 text-sm font-medium text-ink">
                 City
-                <input required className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input required className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold md:col-span-2">
+              <label className="grid gap-2 text-sm font-medium text-ink md:col-span-2">
                 Full address
-                <input required className="h-12 rounded-lg border border-zinc-200 px-4 outline-none focus:border-gym-red" />
+                <input required className="h-12 rounded-lg border border-line bg-paper px-4 outline-none focus:border-ink" />
               </label>
-              <label className="grid gap-2 text-sm font-bold md:col-span-2">
+              <label className="grid gap-2 text-sm font-medium text-ink md:col-span-2">
                 Notes optional
-                <textarea className="min-h-28 rounded-lg border border-zinc-200 p-4 outline-none focus:border-gym-red" />
+                <textarea className="min-h-28 rounded-lg border border-line bg-paper p-4 outline-none focus:border-ink" />
               </label>
             </div>
 
-            <div className="border-t border-zinc-200 pt-5">
-              <h2 className="font-heading text-3xl uppercase">Payment Method</h2>
+            <div className="border-t border-line pt-5">
+              <h2 className="font-heading text-2xl uppercase text-ink">Payment Method</h2>
               <div className="mt-4 grid gap-3">
                 {[
                   ["cash_on_delivery", "Cash on Delivery"],
@@ -69,7 +69,7 @@ export function CheckoutClient() {
                   ["card", "Visa/Mastercard ready soon"]
                 ].map(([value, label]) => (
                   <label
-                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-zinc-200 p-4"
+                    className="flex cursor-pointer items-center gap-3 rounded-xl border border-line p-4 transition hover:border-ink/30"
                     key={value}
                   >
                     <input
@@ -79,13 +79,14 @@ export function CheckoutClient() {
                       checked={paymentMethod === value}
                       onChange={() => setPaymentMethod(value)}
                       disabled={value === "card"}
+                      className="accent-ink"
                     />
-                    <span className="font-bold">{label}</span>
+                    <span className="font-medium text-ink">{label}</span>
                   </label>
                 ))}
               </div>
               {paymentMethod === "vodafone_cash" ? (
-                <div className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-zinc-700">
+                <div className="mt-4 rounded-xl border border-line bg-surface p-4 text-sm text-ink-soft">
                   Send the total to Vodafone Cash number +201159500155, then our team will confirm
                   your order by phone.
                 </div>
@@ -94,35 +95,35 @@ export function CheckoutClient() {
           </div>
         </div>
 
-        <aside className="h-fit rounded-2xl bg-white p-6 shadow-card">
-          <h2 className="font-heading text-3xl uppercase">Your Order</h2>
+        <aside className="h-fit rounded-xl border border-line bg-paper p-6">
+          <h2 className="font-heading text-2xl uppercase text-ink">Your Order</h2>
           <div className="mt-5 grid gap-3 text-sm">
             {items.map((item) => (
               <div className="flex justify-between gap-4" key={`${item.productId}-${item.variant}`}>
-                <span>
+                <span className="text-ink-soft">
                   {item.quantity} x {item.name}
                 </span>
-                <strong>{formatCurrency(item.price * item.quantity)}</strong>
+                <strong className="text-ink">{formatCurrency(item.price * item.quantity)}</strong>
               </div>
             ))}
-            <div className="border-t border-zinc-200 pt-4" />
+            <div className="border-t border-line pt-4" />
             <div className="flex justify-between">
-              <span>Subtotal</span>
-              <strong>{formatCurrency(subtotal)}</strong>
+              <span className="text-ink-soft">Subtotal</span>
+              <strong className="text-ink">{formatCurrency(subtotal)}</strong>
             </div>
             <div className="flex justify-between">
-              <span>Delivery</span>
-              <strong>{formatCurrency(deliveryFee)}</strong>
+              <span className="text-ink-soft">Delivery</span>
+              <strong className="text-ink">{formatCurrency(deliveryFee)}</strong>
             </div>
             <div className="flex justify-between text-lg">
-              <span>Total</span>
-              <strong>{formatCurrency(subtotal + deliveryFee)}</strong>
+              <span className="text-ink">Total</span>
+              <strong className="text-ink">{formatCurrency(subtotal + deliveryFee)}</strong>
             </div>
           </div>
           <button
             type="submit"
             disabled={items.length === 0}
-            className="mt-6 flex h-12 w-full items-center justify-center rounded-lg bg-gym-red font-black uppercase text-white hover:bg-energy-orange disabled:bg-zinc-300"
+            className="mt-6 flex h-12 w-full items-center justify-center rounded-lg bg-ink text-sm font-medium uppercase tracking-wide text-white transition hover:bg-brand-red disabled:bg-surface disabled:text-ink-soft"
           >
             Submit Order
           </button>

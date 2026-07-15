@@ -15,9 +15,9 @@ export default function FaqsPage() {
     <InfoPage title="FAQs">
       <div className="grid gap-4">
         {faqs.map(([question, answer]) => (
-          <details className="rounded-xl bg-light-gray p-5" key={question}>
-            <summary className="cursor-pointer font-bold">{question}</summary>
-            <p className="mt-3 text-zinc-600">{answer}</p>
+          <details className="rounded-xl border border-line bg-surface p-5" key={question}>
+            <summary className="cursor-pointer font-medium text-ink">{question}</summary>
+            <p className="mt-3 text-ink-soft">{answer}</p>
           </details>
         ))}
       </div>

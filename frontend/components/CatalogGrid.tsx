@@ -36,17 +36,17 @@ export function CatalogGrid({ initialProducts = products, title = "Products", su
   }, [category, goal, initialProducts, search, sort]);
 
   return (
-    <section className="bg-light-gray py-12 text-zinc-950">
+    <section className="bg-surface py-12 text-ink">
       <div className="container-page">
         <div className="mb-8">
-          <p className="text-sm font-black uppercase text-gym-red">KMMuscles catalog</p>
-          <h1 className="section-title mt-2 text-zinc-950">{title}</h1>
-          {subtitle ? <p className="mt-3 max-w-2xl text-zinc-600">{subtitle}</p> : null}
+          <p className="eyebrow text-ink-soft">KMMuscles catalog</p>
+          <h1 className="section-title mt-2 text-ink">{title}</h1>
+          {subtitle ? <p className="mt-3 max-w-2xl text-ink-soft">{subtitle}</p> : null}
         </div>
 
-        <div className="mb-8 grid gap-3 rounded-2xl border border-zinc-200 bg-white p-4 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
-          <label className="flex min-h-12 items-center gap-3 rounded-lg bg-light-gray px-4">
-            <Search size={19} className="text-zinc-500" />
+        <div className="mb-8 grid gap-3 rounded-xl border border-line bg-paper p-4 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
+          <label className="flex min-h-12 items-center gap-3 rounded-lg bg-surface px-4">
+            <Search size={19} className="text-ink-soft" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -54,8 +54,8 @@ export function CatalogGrid({ initialProducts = products, title = "Products", su
               className="w-full bg-transparent text-sm outline-none"
             />
           </label>
-          <label className="flex min-h-12 items-center gap-3 rounded-lg bg-light-gray px-4">
-            <SlidersHorizontal size={19} className="text-zinc-500" />
+          <label className="flex min-h-12 items-center gap-3 rounded-lg bg-surface px-4">
+            <SlidersHorizontal size={19} className="text-ink-soft" />
             <select
               value={category}
               onChange={(event) => setCategory(event.target.value)}
@@ -72,7 +72,7 @@ export function CatalogGrid({ initialProducts = products, title = "Products", su
           <select
             value={goal}
             onChange={(event) => setGoal(event.target.value)}
-            className="min-h-12 rounded-lg bg-light-gray px-4 text-sm outline-none"
+            className="min-h-12 rounded-lg bg-surface px-4 text-sm outline-none"
           >
             <option value="all">All goals</option>
             {goals.map((item) => (
@@ -84,7 +84,7 @@ export function CatalogGrid({ initialProducts = products, title = "Products", su
           <select
             value={sort}
             onChange={(event) => setSort(event.target.value)}
-            className="min-h-12 rounded-lg bg-light-gray px-4 text-sm outline-none"
+            className="min-h-12 rounded-lg bg-surface px-4 text-sm outline-none"
           >
             <option value="newest">Newest</option>
             <option value="price_asc">Price low to high</option>
@@ -101,9 +101,9 @@ export function CatalogGrid({ initialProducts = products, title = "Products", su
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-zinc-200 bg-white p-12 text-center">
+          <div className="rounded-xl border border-line bg-paper p-12 text-center">
             <h2 className="font-heading text-4xl uppercase">No products found</h2>
-            <p className="mt-2 text-zinc-500">Try another category, goal, or search term.</p>
+            <p className="mt-2 text-ink-soft">Try another category, goal, or search term.</p>
           </div>
         )}
       </div>

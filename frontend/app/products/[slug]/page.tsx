@@ -29,12 +29,12 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <section className="bg-light-gray py-12 text-zinc-950">
+      <section className="bg-surface py-12 text-ink">
         <div className="container-page grid gap-10 lg:grid-cols-[0.95fr_1.05fr]">
-          <div className="rounded-2xl border border-zinc-200 bg-white p-8 shadow-card">
-            <div className="relative aspect-square overflow-hidden rounded-xl bg-light-gray">
+          <div className="rounded-2xl border border-line bg-paper p-8 shadow-card">
+            <div className="relative aspect-square overflow-hidden rounded-xl bg-surface">
               {product.discountBadge ? (
-                <span className="absolute left-4 top-4 z-10 rounded bg-gym-red px-3 py-1 text-xs font-black uppercase text-white">
+                <span className="absolute left-4 top-4 z-10 rounded bg-brand-red px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white">
                   {product.discountBadge}
                 </span>
               ) : null}
@@ -43,49 +43,49 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </div>
 
           <div className="py-2">
-            <p className="text-sm font-black uppercase text-gym-red">
-              <Link href={`/brands/${product.brand.slug}`}>{product.brand.name}</Link> /{" "}
-              <Link href={`/categories/${product.category.slug}`}>{product.category.name}</Link>
+            <p className="eyebrow text-ink-soft">
+              <Link className="hover:text-brand-red" href={`/brands/${product.brand.slug}`}>{product.brand.name}</Link> /{" "}
+              <Link className="hover:text-brand-red" href={`/categories/${product.category.slug}`}>{product.category.name}</Link>
             </p>
-            <h1 className="mt-3 font-heading text-5xl font-black uppercase leading-none md:text-7xl">
+            <h1 className="mt-3 font-heading text-5xl uppercase leading-none text-ink md:text-6xl">
               {product.name}
             </h1>
             <div className="mt-5 flex flex-wrap items-end gap-3">
-              <p className="text-4xl font-black">{formatCurrency(product.price)}</p>
+              <p className="text-4xl font-semibold text-ink">{formatCurrency(product.price)}</p>
               {product.originalPrice ? (
-                <p className="text-xl text-zinc-500 line-through">{formatCurrency(product.originalPrice)}</p>
+                <p className="text-xl text-brand-red line-through">{formatCurrency(product.originalPrice)}</p>
               ) : null}
             </div>
-            <p className="mt-4 text-sm font-bold uppercase text-success">
+            <p className="mt-4 text-sm font-semibold uppercase tracking-wide text-success">
               {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : "Out of stock"}
             </p>
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-700">{product.description}</p>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-soft">{product.description}</p>
             <AddToCartPanel product={product} />
           </div>
         </div>
       </section>
 
-      <section className="bg-muscle-black py-14">
+      <section className="bg-paper py-14">
         <div className="container-page grid gap-8 lg:grid-cols-3">
-          <div className="rounded-2xl border border-border-gray bg-deep-charcoal p-7">
-            <h2 className="font-heading text-3xl uppercase">Benefits</h2>
-            <ul className="mt-4 grid gap-3 text-zinc-300">
+          <div className="rounded-xl border border-line bg-surface p-7">
+            <h2 className="font-heading text-2xl uppercase text-ink">Benefits</h2>
+            <ul className="mt-4 grid gap-3 text-ink-soft">
               {product.benefits.map((benefit) => (
                 <li key={benefit}>- {benefit}</li>
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl border border-border-gray bg-deep-charcoal p-7">
-            <h2 className="font-heading text-3xl uppercase">How To Use</h2>
-            <p className="mt-4 text-zinc-300">{product.howToUse}</p>
+          <div className="rounded-xl border border-line bg-surface p-7">
+            <h2 className="font-heading text-2xl uppercase text-ink">How To Use</h2>
+            <p className="mt-4 text-ink-soft">{product.howToUse}</p>
           </div>
-          <div className="rounded-2xl border border-border-gray bg-deep-charcoal p-7">
-            <h2 className="font-heading text-3xl uppercase">Nutrition Facts</h2>
+          <div className="rounded-xl border border-line bg-surface p-7">
+            <h2 className="font-heading text-2xl uppercase text-ink">Nutrition Facts</h2>
             <dl className="mt-4 grid gap-3">
               {Object.entries(product.nutritionFacts).map(([label, value]) => (
-                <div className="flex justify-between border-b border-border-gray pb-2" key={label}>
-                  <dt className="text-zinc-400">{label}</dt>
-                  <dd className="font-bold">{value}</dd>
+                <div className="flex justify-between border-b border-line pb-2" key={label}>
+                  <dt className="text-ink-soft">{label}</dt>
+                  <dd className="font-semibold text-ink">{value}</dd>
                 </div>
               ))}
             </dl>
@@ -94,9 +94,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
       </section>
 
       {related.length > 0 ? (
-        <section className="bg-light-gray py-14 text-zinc-950">
+        <section className="border-t border-line bg-surface py-14 text-ink">
           <div className="container-page">
-            <h2 className="section-title text-zinc-950">Related Products</h2>
+            <h2 className="section-title text-ink">Related Products</h2>
             <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {related.map((item) => (
                 <ProductCard product={item} key={item.id} />

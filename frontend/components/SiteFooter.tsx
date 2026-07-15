@@ -5,14 +5,14 @@ import { categories, contact, paymentLogos } from "@/lib/data";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border-gray bg-muscle-black">
+    <footer className="bg-ink text-white">
       <div className="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_0.8fr_0.8fr_1.1fr_1fr]">
         <div>
           <div className="flex items-center gap-3">
             <Image src="/assets/logo-mark.png" width={64} height={60} alt="KMMuscles logo" />
-            <span className="font-heading text-3xl font-black uppercase text-white">KMMuscles</span>
+            <span className="font-heading text-3xl uppercase text-white">KMMuscles</span>
           </div>
-          <p className="mt-4 max-w-xs text-sm leading-6 text-zinc-400">
+          <p className="mt-4 max-w-xs text-sm leading-6 text-white/60">
             Supplements store helping athletes and gym users in Egypt reach their goals with
             strong products, clear advice, and flexible local checkout.
           </p>
@@ -20,7 +20,7 @@ export function SiteFooter() {
 
         <div>
           <h3 className="font-heading text-xl uppercase">Shop</h3>
-          <div className="mt-4 grid gap-2 text-sm text-zinc-400">
+          <div className="mt-4 grid gap-2 text-sm text-white/60">
             {categories.slice(0, 5).map((category) => (
               <Link href={`/categories/${category.slug}`} key={category.slug}>
                 {category.name}
@@ -31,7 +31,7 @@ export function SiteFooter() {
 
         <div>
           <h3 className="font-heading text-xl uppercase">The Company</h3>
-          <div className="mt-4 grid gap-2 text-sm text-zinc-400">
+          <div className="mt-4 grid gap-2 text-sm text-white/60">
             <Link href="/about-us">About Us</Link>
             <Link href="/contact">Contact Us</Link>
             <Link href="/privacy-policy">Privacy Policy</Link>
@@ -42,7 +42,7 @@ export function SiteFooter() {
 
         <div>
           <h3 className="font-heading text-xl uppercase">Contact Us</h3>
-          <div className="mt-4 grid gap-3 text-sm text-zinc-400">
+          <div className="mt-4 grid gap-3 text-sm text-white/60">
             <span className="flex items-center gap-2">
               <Mail size={17} /> {contact.email}
             </span>
@@ -53,10 +53,10 @@ export function SiteFooter() {
               <Phone size={17} /> Tel: {contact.phone}
             </span>
             <div className="flex gap-3 pt-2">
-              <Link className="rounded-full bg-deep-charcoal p-2 hover:bg-gym-red" href={contact.facebook}>
+              <Link className="rounded-full bg-white/10 p-2 transition hover:bg-brand-red" href={contact.facebook}>
                 <Facebook size={18} />
               </Link>
-              <Link className="rounded-full bg-deep-charcoal p-2 hover:bg-gym-red" href={contact.instagram}>
+              <Link className="rounded-full bg-white/10 p-2 transition hover:bg-brand-red" href={contact.instagram}>
                 <Instagram size={18} />
               </Link>
             </div>
@@ -77,7 +77,7 @@ export function SiteFooter() {
           </div>
         </div>
       </div>
-      <div className="border-t border-border-gray py-5 text-center text-xs uppercase text-zinc-500">
+      <div className="border-t border-white/10 py-5 text-center text-xs uppercase tracking-wide text-white/40">
         KMMuscles © 2026
       </div>
     </footer>

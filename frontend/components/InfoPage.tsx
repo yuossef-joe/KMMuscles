@@ -8,23 +8,23 @@ type Props = {
 
 export function InfoPage({ title, eyebrow = "KMMuscles", children }: Props) {
   return (
-    <section className="bg-light-gray py-12 text-zinc-950">
+    <section className="bg-surface py-12 text-ink">
       <div className="container-page grid gap-8 lg:grid-cols-[320px_1fr]">
-        <aside className="h-fit rounded-2xl bg-muscle-black p-6 text-white">
-          <h2 className="font-heading text-3xl uppercase">Company</h2>
-          <nav className="mt-5 grid gap-2 text-sm font-bold uppercase text-zinc-300">
-            <Link href="/about-us">About Us</Link>
-            <Link href="/contact">Contact</Link>
-            <Link href="/privacy-policy">Privacy Policy</Link>
-            <Link href="/shipping-policy">Shipping Policy</Link>
-            <Link href="/refund-policy">Refund Policy</Link>
-            <Link href="/terms-and-conditions">Terms & Conditions</Link>
-            <Link href="/faqs">FAQs</Link>
+        <aside className="h-fit rounded-xl border border-line bg-paper p-6">
+          <h2 className="font-heading text-2xl uppercase text-ink">Company</h2>
+          <nav className="mt-5 grid gap-1 text-sm font-medium text-ink-soft">
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/about-us">About Us</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/contact">Contact</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/privacy-policy">Privacy Policy</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/shipping-policy">Shipping Policy</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/refund-policy">Refund Policy</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/terms-and-conditions">Terms &amp; Conditions</Link>
+            <Link className="rounded-lg px-3 py-2 transition hover:bg-surface hover:text-ink" href="/faqs">FAQs</Link>
           </nav>
         </aside>
-        <article className="rounded-2xl bg-white p-8 shadow-card">
-          <p className="text-sm font-black uppercase text-gym-red">{eyebrow}</p>
-          <h1 className="section-title mt-2 text-zinc-950">{title}</h1>
+        <article className="rounded-xl border border-line bg-paper p-8 shadow-card">
+          <p className="eyebrow text-ink-soft">{eyebrow}</p>
+          <h1 className="section-title mt-2 text-ink">{title}</h1>
           <div className="prose prose-zinc mt-8 max-w-none leading-8">{children}</div>
         </article>
       </div>
